@@ -41,7 +41,7 @@ class WZCX extends Token
     /**
 	 * 获取第三方违章查询平台的access_token
 	 */
-	public function query($params) {
+	public function car_query($params) {
         $appsecret = config("wzcx.appsecret");
 		$sign = $this->_make_sign($params, $appsecret);
 
@@ -55,11 +55,36 @@ class WZCX extends Token
 		// echo "<pre>" . print_r($header);
 		try {
             $result = $this->curl_post($url, $params, $header);
-            exit($result);
+            return $result;
 		} catch (Exception $e) {
             self::returnMsg(403, "查询失败，请稍候重试");
 		}
     }
+
+    
+    /**
+	 * 获取第三方违章查询平台的access_token
+	 */
+	public function driver_query($params) {
+        $appsecret = config("wzcx.appsecret");
+		$sign = $this->_make_sign($params, $appsecret);
+
+		$params["sign"] = $sign;
+
+		$url = config('wzcx.api_url') . "/driver_query";
+        
+        $header = [
+            "Authorization: " . $this->get_authorization($this->access_token)
+        ];
+		// echo "<pre>" . print_r($header);
+		try {
+            $result = $this->curl_post($url, $params, $header);
+            return $result;
+		} catch (Exception $e) {
+            self::returnMsg(403, "查询失败，请稍候重试");
+		}
+    }
+    
     
 }
 
