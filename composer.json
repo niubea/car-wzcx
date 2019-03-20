@@ -1,0 +1,24 @@
+{
+    "name": "libo/car-wzcx",
+    "description": "基于ThinkPHP5.1框架的违章查询SDK",
+    "homepage": "http://www.niubea.com",
+    "keywords": ["thinkphp5", "libo", "car-wzcx"],
+    "type": "think-extend",
+    "autoload": {
+        "psr-4": {
+            "libo\\car_wzcx\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=5.6",
+        "topthink/framework": "^5.1",
+        "topthink/think-helper": ">=1.0.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "libo",
+            "email": "libo@usa.com"
+        }
+    ]
+}
