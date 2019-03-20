@@ -55,7 +55,7 @@ class Token
 		$params["sign"] = $sign;
 
 		
-		$url = config('wzcx.api_url') . "/token";
+		$url = config('wzcx.api_url') . "/v1/token";
 		
 		// echo "<pre>access_token:" . ($this->access_token)."**end";
 		try {
