@@ -71,7 +71,7 @@ class WZCX extends Token
 
 		$params["sign"] = $sign;
 
-		$url = config('wzcx.api_url') . "/driver_query";
+		$url = config('wzcx.api_url') . "/v1/driver_query";
         
         $header = [
             "Authorization: " . $this->get_authorization($this->access_token)
