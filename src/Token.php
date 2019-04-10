@@ -66,7 +66,7 @@ class Token
 			$array_return = json_decode($result, true);
 
 			if($array_return ["code"] != 200) {
-				self::returnMsg(401, "access_token获取失败，原因：" . $array_return["msg"]);
+				self::returnMsg(401, "access_token获取失败，原因：" . $array_return["message"]);
 			}
 
 			$this->access_token = $array_return['data']['access_token'];
@@ -153,13 +153,13 @@ class Token
 	/**
 	 * 返回成功
 	 */
-	public static function returnMsg($code = 200, $msg, $data = [], $header = [], $message = '', $die = true)
+	public static function returnMsg($code = 200, $message, $data = [], $header = [], $error = '', $die = true)
 	{	
-        if($message == "") $message = $msg;
+        if($error == "") $error = $message;
 		// http_response_code($code);    //设置返回头部
         $return['code'] = (int)$code;
-        $return['message'] = $message;          //English 的提示信息
-        $return['msg'] = $msg;                  //中文的提示信息
+        $return['message'] = $message;          //中文的提示信息
+        $return['error'] = $error;                  //错误代号
         $return['data'] = is_array($data) ? $data : ['info'=>$data];
         // 发送头部信息
         foreach ($header as $name => $val) {

@@ -27,8 +27,8 @@ class WZCX extends Token
      */
     public $return_fomat = array(
         "code"  =>  "40301",
-        "msg"   =>  "不合法的access_token",
-        "message"   =>  "illegal access_token",
+        "message"   =>  "不合法的access_token",
+        "error"   =>  "illegal access_token",
         "data"  =>  []
     );
 
