@@ -61,7 +61,7 @@ class Token
 		try {
 			$result = $this->curl_post($url, json_encode($params), [], "PUT");
 
-			echo $result;die;
+			// echo $result;die;
 			
 			$array_return = json_decode($result, true);
 
