@@ -47,14 +47,15 @@ class WZCX extends Token
 
 		$params["sign"] = $sign;
 
-		$url = config('wzcx.api_url') . "/v1/car_query";
+		$url = config('wzcx.api_car_url') . "/car_query";
         
         $header = [
             "Authorization: " . $this->get_authorization($this->access_token)
         ];
 		// echo "<pre>" . print_r($header);
 		try {
-            $result = $this->curl_post($url, $params, $header);
+            $result = $this->curl_post($url, json_encode($params), $header, "PUT");
+            // echo $result; die;
             return $result;
 		} catch (Exception $e) {
             self::returnMsg(403, "查询失败，请稍候重试");
@@ -71,14 +72,14 @@ class WZCX extends Token
 
 		$params["sign"] = $sign;
 
-		$url = config('wzcx.api_url') . "/v1/driver_query";
+		$url = config('wzcx.api_car_url') . "/driver_query";
         
         $header = [
             "Authorization: " . $this->get_authorization($this->access_token)
         ];
 		// echo "<pre>" . print_r($header);
 		try {
-            $result = $this->curl_post($url, $params, $header);
+            $result = $this->curl_post($url, json_encode($params), $header, "PUT");
             return $result;
 		} catch (Exception $e) {
             self::returnMsg(403, "查询失败，请稍候重试");

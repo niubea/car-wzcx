@@ -55,13 +55,13 @@ class Token
 		$params["sign"] = $sign;
 
 		
-		$url = config('wzcx.api_url') . "/v1/token";
+		$url = config('wzcx.api_url') . "/token";
 		
 		// echo "<pre>access_token:" . ($this->access_token)."**end";
 		try {
-			$result = curl_post($url, $params);
+			$result = $this->curl_post($url, json_encode($params), [], "PUT");
 
-			// echo $result;die;
+			echo $result;die;
 			
 			$array_return = json_decode($result, true);
 
@@ -119,30 +119,6 @@ class Token
 		return md5(uniqid(microtime(true),true));
 	}
 	
-     /* PHP CURL HTTPS POST */
-     protected function curl_post($url, $data, $header = []){ // 模拟提交数据函数
-        $curl = curl_init(); // 启动一个CURL会话
-        curl_setopt($curl, CURLOPT_URL, $url); // 要访问的地址
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0); // 从证书中检查SSL加密算法是否存在
-        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
-        curl_setopt($curl, CURLOPT_AUTOREFERER, 1); // 自动设置Referer
-        curl_setopt($curl, CURLOPT_POST, 1); // 发送一个常规的Post请求
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data); // Post提交的数据包
-        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-        // 返回 response_header, 该选项非常重要,如果不为 true, 只会获得响应的正文
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); // 获取的信息以文件流的形式返回
-        $tmpInfo = curl_exec($curl); // 执行操作
-        if (curl_errno($curl)) {
-            return 'Errno'.curl_error($curl);//捕抓异常
-        }
-        curl_close($curl); // 关闭CURL会话
-        return $tmpInfo; // 返回数据，json格式
-	}
-	
 	/**
 	 *  格式化输出
 	 */
@@ -172,6 +148,70 @@ class Token
 		echo (json_encode($return, JSON_UNESCAPED_UNICODE));
 		die;
 	}
+
+    protected function curl_get($url, $header = []){
+        $curl = curl_init(); // 启动一个CURL会话
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        // 返回 response_header, 该选项非常重要,如果不为 true, 只会获得响应的正文
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+        $tmpInfo = curl_exec($curl);     //返回api的json对象
+        //关闭URL请求
+        curl_close($curl);
+        return $tmpInfo;    //返回json对象
+    }
+
+    /* PHP CURL HTTPS POST */
+    protected function curl_post($url, $data, $header = [], $request_type = "POST"){ // 模拟提交数据函数
+        $curl = curl_init(); // 启动一个CURL会话
+        curl_setopt($curl, CURLOPT_URL, $url); // 要访问的地址
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0); // 从证书中检查SSL加密算法是否存在
+        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
+        curl_setopt($curl, CURLOPT_AUTOREFERER, 1); // 自动设置Referer
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request_type); //设置请求方式
+        if($request_type == "POST") curl_setopt($curl, CURLOPT_POST, 1); // 发送一个常规的Post请求
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data); // Post提交的数据包
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        // 返回 response_header, 该选项非常重要,如果不为 true, 只会获得响应的正文
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); // 获取的信息以文件流的形式返回
+        $tmpInfo = curl_exec($curl); // 执行操作
+        if (curl_errno($curl)) {
+            return 'Errno'.curl_error($curl);//捕抓异常
+        }
+        curl_close($curl); // 关闭CURL会话
+        return $tmpInfo; // 返回数据，json格式
+    }
+
+    /* PHP CURL HTTPS POST */
+    protected function curl_put($url, $data, $header = []){ // 模拟提交数据函数
+        $curl = curl_init(); // 启动一个CURL会话
+        curl_setopt($curl, CURLOPT_URL, $url); // 要访问的地址
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0); // 从证书中检查SSL加密算法是否存在
+        // curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
+        // curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
+        // curl_setopt($curl, CURLOPT_AUTOREFERER, 1); // 自动设置Referer
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT"); //设置请求方式
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data); // Post提交的数据包
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        // 返回 response_header, 该选项非常重要,如果不为 true, 只会获得响应的正文
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); // 获取的信息以文件流的形式返回
+        $tmpInfo = curl_exec($curl); // 执行操作
+        if (curl_errno($curl)) {
+            return 'Errno'.curl_error($curl);//捕抓异常
+        }
+        curl_close($curl); // 关闭CURL会话
+        return $tmpInfo; // 返回数据，json格式
+    }
 }
 
 ?>
